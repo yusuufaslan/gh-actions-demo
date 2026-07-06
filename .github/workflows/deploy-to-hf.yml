@@ -1,0 +1,80 @@
+name: Deploy to HuggingFace Spaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "requirements.txt"
+      - "Dockerfile"
+  workflow_dispatch:
+
+env:
+  HF_SPACE_ID: "yusuf-aslan/text-tools"
+  HF_USERNAME: "yusuf-aslan"
+  HF_SPACE_NAME: "text-tools"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Login to HuggingFace Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          huggingface-cli login --token "${HF_TOKEN}"
+
+      - name: Create Space if Not Exists
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          from huggingface_hub import create_repo, HfApi
+          api = HfApi()
+          try:
+              create_repo('${{ env.HF_SPACE_ID }}', repo_type='space', space_sdk='gradio', exist_ok=True)
+              print('Space mevcut veya olusturuldu.')
+          except Exception as e:
+              if 'already exists' in str(e):
+                  print('Space zaten mevcut.')
+              else:
+                  raise
+          "
+
+      - name: Upload App Files to Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi()
+          api.upload_folder(
+              folder_path='.',
+              repo_id='${{ env.HF_SPACE_ID }}',
+              repo_type='space',
+              include=['src/app.py', 'requirements.txt', 'Dockerfile'],
+              ignore_patterns=['.github/**', '.git/**', '*.md', 'docs/**', '__pycache__/**', '.kilo/**', '.vscode/**']
+          )
+          print('Dosyalar Space yuklendi.')
+          "
+
+      - name: Verify Space
+        run: |
+          echo "Deploy tamamlandi!"
+          echo "Space adresi: https://huggingface.co/spaces/${{ env.HF_SPACE_ID }}"
+          echo "Erisim: https://huggingface.co/spaces/${{ env.HF_USERNAME }}/${{ env.HF_SPACE_NAME }}"

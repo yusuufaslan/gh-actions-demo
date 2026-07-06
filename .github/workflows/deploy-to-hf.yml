@@ -5,14 +5,13 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "scripts/**"
       - "requirements.txt"
       - "Dockerfile"
   workflow_dispatch:
 
 env:
   HF_SPACE_ID: "yusuf-aslan/text-tools"
-  HF_USERNAME: "yusuf-aslan"
-  HF_SPACE_NAME: "text-tools"
   HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
 jobs:
@@ -34,42 +33,11 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create Space if Not Exists
+      - name: Deploy to Space
         run: |
-          python -c "
-          from huggingface_hub import HfApi
-          api = HfApi()
-          try:
-              api.create_repo(
-                  repo_id='${{ env.HF_SPACE_ID }}',
-                  repo_type='space',
-                  space_sdk='gradio',
-                  exist_ok=True
-              )
-              print('Space mevcut veya olusturuldu.')
-          except Exception as e:
-              if 'already exists' in str(e):
-                  print('Space zaten mevcut.')
-              else:
-                  raise
-          "
-
-      - name: Upload Files to Space
-        run: |
-          python -c "
-          from huggingface_hub import HfApi
-          api = HfApi()
-          api.upload_folder(
-              folder_path='.',
-              repo_id='${{ env.HF_SPACE_ID }}',
-              repo_type='space',
-              include=['src/app.py', 'requirements.txt', 'Dockerfile'],
-              ignore_patterns=['.github/**', '.git/**', '*.md', 'docs/**', '__pycache__/**', '.kilo/**', '.vscode/**']
-          )
-          print('Dosyalar Space yuklendi.')
-          "
+          python scripts/deploy.py all
 
       - name: Verify Deployment
         run: |
           echo "Deploy tamamlandi!"
-          echo "Space adresi: https://huggingface.co/spaces/${{ env.HF_SPACE_ID }}"
+          echo "Space adresi: https://huggingface.co/spaces/yusuf-aslan/text-tools"

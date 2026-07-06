@@ -1,5 +1,37 @@
 import gradio as gr
 
+CSS = """
+.main-header {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.main-header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+.main-header p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+.stats-output {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+.footer-text {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    margin-top: 20px;
+}
+"""
+
 
 def count_words(text: str) -> int:
     if not text or not text.strip():
@@ -59,7 +91,6 @@ def transform_case(text: str, operation: str) -> str:
 
 
 def get_stats(text: str) -> str:
-    """Generate statistics report for the given text."""
     if not text or not text.strip():
         return "Lütfen analiz edilecek bir metin girin."
 
@@ -83,39 +114,6 @@ def clear_all():
 
 
 def create_app() -> gr.Blocks:
-    """Create and return the Gradio application."""
-    css = """
-    .main-header {
-        text-align: center;
-        padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-    .main-header h1 {
-        font-size: 28px;
-        margin-bottom: 8px;
-    }
-    .main-header p {
-        font-size: 14px;
-        opacity: 0.9;
-    }
-    .stats-output {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-        font-family: monospace;
-        white-space: pre-wrap;
-    }
-    .footer-text {
-        text-align: center;
-        font-size: 12px;
-        color: #888;
-        margin-top: 20px;
-    }
-    """
-
     with gr.Blocks(title="Text Tools") as demo:
         gr.HTML("""
         <div class="main-header">
@@ -175,5 +173,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
         theme=gr.themes.Soft(),
-        css=css,
+        css=CSS,
     )

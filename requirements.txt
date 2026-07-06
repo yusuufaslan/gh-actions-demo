@@ -1,2 +1,2 @@
-gradio==5.9.1
+gradio>=5.0.0
 huggingface-hub>=0.28.0

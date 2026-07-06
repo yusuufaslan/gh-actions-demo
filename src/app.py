@@ -123,14 +123,14 @@ def create_app() -> gr.Blocks:
     ) as demo:
         gr.HTML("""
         <div class="main-header">
-            <h1>📝 Text Tools</h1>
-            <p>Metin Analiz ve Dönüşüm Araçları — GitHub Actions ile HuggingFace Spaces'e Deploy Edildi</p>
+            <h1>\U0001f4dd Text Tools</h1>
+            <p>Metin Analiz ve D\u00f6n\u00fc\u015f\u00fcm Ara\u00e7lar\u0131 \u2014 GitHub Actions ile HuggingFace Spaces'e Deploy Edildi</p>
         </div>
         """)
 
         text_input = gr.Textbox(
             label="Metin",
-            placeholder="Analiz etmek veya dönüştürmek için metninizi buraya yazın...",
+            placeholder="Analiz etmek veya d\u00f6n\u00fc\u015ft\u00fcrmek i\u00e7in metninizi buraya yaz\u0131n...",
             lines=5,
             max_lines=20,
         )
@@ -138,10 +138,10 @@ def create_app() -> gr.Blocks:
         with gr.Row():
             # Left column: Statistics
             with gr.Column(scale=1):
-                gr.Markdown("### 📊 İstatistikler")
-                stats_btn = gr.Button("İstatistikleri Göster", variant="primary")
+                gr.Markdown("### \ud83d\udcca İstatistikler")
+                stats_btn = gr.Button("İstatistikleri G\u00f6ster", variant="primary")
                 stats_output = gr.Textbox(
-                    label="Sonuç",
+                    label="Sonu\u00e7",
                     lines=8,
                     max_lines=10,
                     show_copy_button=True,
@@ -149,22 +149,22 @@ def create_app() -> gr.Blocks:
 
             # Right column: Transformation
             with gr.Column(scale=1):
-                gr.Markdown("### 🔤 Dönüşüm")
+                gr.Markdown("### \U0001f524 D\u00f6n\u00fc\u015f\u00fcm")
                 case_dropdown = gr.Dropdown(
-                    choices=["Büyük Harf", "Küçük Harf", "Başlık Formatı", "Ters Çevir"],
-                    value="Büyük Harf",
-                    label="İşlem",
+                    choices=["B\u00fcy\u00fck Harf", "K\u00fc\u00e7\u00fck Harf", "Ba\u015fl\u0131k Format\u0131", "Ters \u00c7evir"],
+                    value="B\u00fcy\u00fck Harf",
+                    label="\u0130\u015lem",
                 )
-                transform_btn = gr.Button("Dönüştür", variant="secondary")
+                transform_btn = gr.Button("D\u00f6n\u00fc\u015ft\u00fcr", variant="secondary")
                 transform_output = gr.Textbox(
-                    label="Dönüştürülmüş Metin",
+                    label="D\u00f6n\u00fc\u015ft\u00fcr\u00fclm\u00fc\u015f Metin",
                     lines=5,
                     max_lines=20,
                     show_copy_button=True,
                 )
 
         with gr.Row():
-            clear_btn = gr.Button("🗑️ Temizle", variant="stop")
+            clear_btn = gr.Button("\U0001f5d1\ufe0f Temizle", variant="stop")
 
         # Event handlers
         stats_btn.click(get_stats, inputs=text_input, outputs=stats_output)

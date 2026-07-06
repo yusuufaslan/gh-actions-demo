@@ -58,7 +58,6 @@ jobs:
           FILE_LIST=(
             "src/app.py:app.py"
             "requirements.txt:requirements.txt"
-            "Dockerfile:Dockerfile"
           )
           for entry in "${FILE_LIST[@]}"; do
               IFS=':' read -r local remote <<< "$entry"

@@ -54,7 +54,7 @@ deploy-to-hf.yml                  deploy-hf-space.yml
 ```
 
 **deploy-to-hf.yml** — Ne zaman çalışacağını belirler (trigger):
-- `src/` veya `requirements.txt` değiştiğinde `src/app.py`
+- `src/app.py` veya `requirements.txt` değiştiğinde
 - `.github/workflows/**` yolundaki bir dosya değiştiğinde
 - Manuel olarak `workflow_dispatch` ile
 
@@ -302,8 +302,8 @@ print(f"Yuklendi: {local_path} -> {remote_path}")
 | Workflow çalışmıyor | `.github/workflows/` yolunu kontrol edin |
 | 403 Forbidden | HF Token'ının Write yetkisi olduğundan emin olun |
 | Space başlamıyor | Space sayfasında "Factory Reboot" yapın |
-| "Space bulunamadi hatası | Space adını ve HF Token'ı kontrol edin |
-| Dosya güncelleme yansımadı | Space sayfalarından "Factory Reboot" yapın (bazen cache'i nedeniyle gecikmeli olabilir) |
+| "Space bulunamadi" hatası | Space adını ve HF Token'ı kontrol edin |
+| Dosya güncelleme yansımadı | Space sayfalarından "Factory Reboot" yapın (bazen cache nedeniyle gecikmeli olabilir) |
 
 ---
 

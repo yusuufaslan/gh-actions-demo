@@ -34,54 +34,49 @@ jobs:
           pip install huggingface-hub
 
       - name: Create Space if Not Exists
-        run: |
-          python - <<'PYEOF'
-          from huggingface_hub import HfApi
-          api = HfApi()
-          try:
-              api.create_repo(
-                  repo_id="${{ inputs.space-id }}",
-                  repo_type="space",
-                  space_sdk="gradio",
-                  exist_ok=True,
-              )
-              print("Space mevcut veya olusturuldu.")
-          except Exception as e:
-              if "already exists" in str(e):
-                  print("Space zaten mevcut.")
-              else:
-                  raise
-          PYEOF
+        run: python - <<'PYEOF'
+from huggingface_hub import HfApi
+api = HfApi()
+try:
+    api.create_repo(
+        repo_id="${{ inputs.space-id }}",
+        repo_type="space",
+        space_sdk="gradio",
+        exist_ok=True,
+    )
+    print("Space mevcut veya olusturuldu.")
+except Exception as e:
+    if "already exists" in str(e):
+        print("Space zaten mevcut.")
+    else:
+        raise
+PYEOF
 
       - name: Upload Files to Space
         run: |
           SPACE_ID="${{ inputs.space-id }}"
-          python - <<PYEOF
-          import os
-          from huggingface_hub import HfApi
-
-          space_id = os.environ["SPACE_ID"]
-          api = HfApi()
-
-          files = [
-              ("src/app.py", "app.py"),
-              ("requirements.txt", "requirements.txt"),
-          ]
-
-          for local_path, remote_path in files:
-              if os.path.isfile(local_path):
-                  print(f"Yukleniyor: {local_path} -> {remote_path}")
-                  api.upload_file(
-                      path_or_fileobj=local_path,
-                      path_in_repo=remote_path,
-                      repo_id=space_id,
-                      repo_type="space",
-                  )
-              else:
-                  print(f"UYARI: {local_path} bulunamadi, atlan.")
-
-          print("Dosyalar Space yuklendi.")
-          PYEOF
+          python - <<'PYEOF'
+import os
+from huggingface_hub import HfApi
+api = HfApi()
+space_id = os.environ["SPACE_ID"]
+files = [
+    ("src/app.py", "app.py"),
+    ("requirements.txt", "requirements.txt"),
+]
+for local_path, remote_path in files:
+    if os.path.isfile(local_path):
+        print(f"Yukleniyor: {local_path} -> {remote_path}")
+        api.upload_file(
+            path_or_fileobj=local_path,
+            path_in_repo=remote_path,
+            repo_id=space_id,
+            repo_type="space",
+        )
+    else:
+        print(f"UYARI: {local_path} bulunamadi, atlan.")
+print("Dosyalar Space yuklendi.")
+PYEOF
 
       - name: Verify Deployment
         run: |

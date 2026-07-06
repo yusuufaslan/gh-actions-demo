@@ -1,0 +1,64 @@
+name: HuggingFace Spaces Deploy (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      space-id:
+        description: "HuggingFace Space ID (owner/name)"
+        required: true
+        type: string
+    secrets:
+      HF_TOKEN:
+        required: true
+
+env:
+  HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install huggingface-hub
+
+      - name: Create Space if Not Exists
+        env:
+          SPACE_ID: ${{ inputs.space-id }}
+        run: |
+          python .github/workflows/scripts/create_space.py
+
+      - name: Upload Files to Space
+        env:
+          SPACE_ID: ${{ inputs.space-id }}
+        run: |
+          FILE_LIST=(
+            "src/app.py:app.py"
+            "requirements.txt:requirements.txt"
+          )
+          for entry in "${FILE_LIST[@]}"; do
+              IFS=':' read -r local remote <<< "$entry"
+              if [[ -f "$local" ]]; then
+                  echo "Yukleniyor: $local -> $remote"
+                  LOCAL_PATH="$local" REMOTE_PATH="$remote" python .github/workflows/scripts/upload_file.py
+              else
+                  echo "UYARI: $local bulunamadi, atlan."
+              fi
+          done
+          echo "Dosyalar Space yuklendi."
+
+      - name: Verify Deployment
+        run: |
+          echo "Deploy tamamlandi!"
+          echo "Space adresi: https://huggingface.co/spaces/${{ inputs.space-id }}"

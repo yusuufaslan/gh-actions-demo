@@ -61,7 +61,7 @@ def transform_case(text: str, operation: str) -> str:
 def get_stats(text: str) -> str:
     """Generate statistics report for the given text."""
     if not text or not text.strip():
-        return "Lutfen analiz edilecek bir metin girin."
+        return "Lut\u0131f\u0131n analiz edilecek bir metin girin."
 
     stats = {
         "Karakter (toplam)": count_characters(text),
@@ -153,7 +153,7 @@ def create_app() -> gr.Blocks:
                 )
                 transform_btn = gr.Button("D\u00f6n\u00fc\u015ft\u00fcr", variant="secondary")
                 transform_output = gr.Textbox(
-                    label="D\u00f6n\u00fc\u015ft\u00fcr\u00fclm\u00fcs Metin",
+                    label="D\u00f6n\u00fc\u015ft\u00fcr\u00fclm\u00fc\u015f Metin",
                     lines=5,
                     max_lines=20,
                     show_copy_button=True,

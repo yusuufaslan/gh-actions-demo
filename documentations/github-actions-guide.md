@@ -16,7 +16,7 @@
 5. [Workflow Dosyası Yapısı](#5-workflow-dosyası-yapısı)
 6. [Trigger'lar (Tetikleyiciler)](#6-triggerlar-tetikleyiciler)
 7. [Actions Hub ve Hazır Actions](#7-actions-hub-ve-hazır-actions)
-8. [Kendi Action'ınızı Yazma](#8-kendi-actionınızı-yazma)
+8. [Kendi Action'ınızı Yazma](#8-kendi-actionlarınızı-yazma)
 9. [Environment Variables ve Secrets](#9-environment-variables-ve-secrets)
 10. [Cache ve Artifact'lar](#10-cache-ve-artifactlar)
 11. [Matrix Builds](#11-matrix-builds)
@@ -511,9 +511,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Deploying..."
 
-    # Slack bildirimi her zaman çalışır (success ya da failure)
+      - name: Deploy
+        run: echo "Deploying..."
+
     if: always()
     steps:
       - name: Slack Notification

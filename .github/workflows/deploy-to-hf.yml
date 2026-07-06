@@ -5,39 +5,14 @@ on:
     branches: [main]
     paths:
       - "src/**"
-      - "scripts/**"
       - "requirements.txt"
       - "Dockerfile"
   workflow_dispatch:
 
-env:
-  HF_SPACE_ID: "yusuf-aslan/text-tools"
-  HF_TOKEN: ${{ secrets.HF_TOKEN }}
-
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Deploy to Space
-        run: |
-          python scripts/deploy.py all
-
-      - name: Verify Deployment
-        run: |
-          echo "Deploy tamamlandi!"
-          echo "Space adresi: https://huggingface.co/spaces/yusuf-aslan/text-tools"
+    uses: ./.github/workflows/deploy-hf-space.yml
+    with:
+      space-id: "yusuf-aslan/text-tools"
+    secrets:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}

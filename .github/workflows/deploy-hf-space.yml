@@ -1,0 +1,86 @@
+name: HuggingFace Spaces Deploy (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      space-id:
+        description: "HuggingFace Space ID (owner/name)"
+        required: true
+        type: string
+    secrets:
+      HF_TOKEN:
+        required: true
+
+env:
+  HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install huggingface-hub
+
+      - name: Create Space if Not Exists
+        run: |
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi()
+          try:
+              api.create_repo(
+                  repo_id='${{ inputs.space-id }}',
+                  repo_type='space',
+                  space_sdk='gradio',
+                  exist_ok=True,
+              )
+              print('Space mevcut veya olusturuldu.')
+          except Exception as e:
+              if 'already exists' in str(e):
+                  print('Space zaten mevcut.')
+              else:
+                  raise
+          "
+
+      - name: Upload Files to Space
+        run: |
+          FILE_LIST=(
+            "src/app.py:app.py"
+            "requirements.txt:requirements.txt"
+            "Dockerfile:Dockerfile"
+          )
+          for entry in "${FILE_LIST[@]}"; do
+              IFS=':' read -r local remote <<< "$entry"
+              if [[ -f "$local" ]]; then
+                  echo "Yukleniyor: $local -> $remote"
+                  python -c "
+                  from huggingface_hub import HfApi
+                  api = HfApi()
+                  api.upload_file(
+                      path_or_fileobj='$local',
+                      path_in_repo='$remote',
+                      repo_id='${{ inputs.space-id }}',
+                      repo_type='space',
+                  )
+                  "
+              else
+                  echo "UYARI: $local bulunamadi, atlan."
+              fi
+          done
+          echo "Dosyalar Space yuklendi."
+
+      - name: Verify Deployment
+        run: |
+          echo "Deploy tamamlandi!"
+          echo "Space adresi: https://huggingface.co/spaces/${{ inputs.space-id }}"

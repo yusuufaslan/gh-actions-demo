@@ -118,7 +118,7 @@ def create_app() -> gr.Blocks:
         gr.HTML("""
         <div class="main-header">
             <h1>📝 Text Tools</h1>
-            <p>Metin Analiz ve Dönüşüm Araçları — GitHub Actions ile HuggingFace Spaces'e Deploy Edildi</p>
+            <p>Metin Analiz ve Dönüşüm Aracı Demo</p>
         </div>
         """)
 

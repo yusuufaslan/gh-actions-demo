@@ -35,47 +35,41 @@ jobs:
           pip install -r requirements.txt
 
       - name: Create Space if Not Exists
-        run: python - <<'PYEOF'
+        run: |
+          python -c "
           from huggingface_hub import HfApi
           api = HfApi()
           try:
               api.create_repo(
-                  repo_id="yusuf-aslan/text-tools",
-                  repo_type="space",
-                  space_sdk="gradio",
+                  repo_id='${{ env.HF_SPACE_ID }}',
+                  repo_type='space',
+                  space_sdk='gradio',
                   exist_ok=True
               )
-              print("Space mevcut veya olusturuldu.")
+              print('Space mevcut veya olusturuldu.')
           except Exception as e:
-              if "already exists" in str(e):
-                  print("Space zaten mevcut.")
+              if 'already exists' in str(e):
+                  print('Space zaten mevcut.')
               else:
                   raise
-PYEOF
+          "
 
       - name: Upload Files to Space
-        run: python - <<'PYEOF'
+        run: |
+          python -c "
           from huggingface_hub import HfApi
           api = HfApi()
           api.upload_folder(
-              folder_path=".",
-              repo_id="yusuf-aslan/text-tools",
-              repo_type="space",
-              include=["src/app.py", "requirements.txt", "Dockerfile"],
-              ignore_patterns=[
-                  ".github/**",
-                  ".git/**",
-                  "*.md",
-                  "docs/**",
-                  "__pycache__/**",
-                  ".kilo/**",
-                  ".vscode/**",
-              ]
+              folder_path='.',
+              repo_id='${{ env.HF_SPACE_ID }}',
+              repo_type='space',
+              include=['src/app.py', 'requirements.txt', 'Dockerfile'],
+              ignore_patterns=['.github/**', '.git/**', '*.md', 'docs/**', '__pycache__/**', '.kilo/**', '.vscode/**']
           )
-          print("Dosyalar Space yuklendi.")
-PYEOF
+          print('Dosyalar Space yuklendi.')
+          "
 
       - name: Verify Deployment
         run: |
           echo "Deploy tamamlandi!"
-          echo "Space adresi: https://huggingface.co/spaces/yusuf-aslan/text-tools"
+          echo "Space adresi: https://huggingface.co/spaces/${{ env.HF_SPACE_ID }}"

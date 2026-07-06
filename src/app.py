@@ -49,10 +49,10 @@ def to_reverse(text: str) -> str:
 
 def transform_case(text: str, operation: str) -> str:
     operations = {
-        "Bu\u00fcy\u00fck Harf": to_upper,
-        "K\u00fc\u00e7\u00fck Harf": to_lower,
-        "Ba\u015fl\u0131k Format\u0131": to_title,
-        "Ters \u00c7evir": to_reverse,
+        "Büyük Harf": to_upper,
+        "Küçük Harf": to_lower,
+        "Başlık Formatı": to_title,
+        "Ters Çevir": to_reverse,
     }
     fn = operations.get(operation, to_upper)
     return fn(text)
@@ -61,17 +61,17 @@ def transform_case(text: str, operation: str) -> str:
 def get_stats(text: str) -> str:
     """Generate statistics report for the given text."""
     if not text or not text.strip():
-        return "Lut\u0131f\u0131n analiz edilecek bir metin girin."
+        return "Lütfen analiz edilecek bir metin girin."
 
     stats = {
         "Karakter (toplam)": count_characters(text),
-        "Karakter (bo\u015fluksuz)": count_characters_no_spaces(text),
+        "Karakter (boşluksuz)": count_characters_no_spaces(text),
         "Kelime": count_words(text),
-        "Cumle": count_sentences(text),
+        "Cümle": count_sentences(text),
         "Paragraf": count_paragraphs(text),
     }
 
-    lines = ["Metin Istatistikleri", "=" * 40]
+    lines = ["📊 Metin İstatistikleri", "=" * 40]
     for label, value in stats.items():
         lines.append(f"  {label}: {value}")
 
@@ -101,6 +101,13 @@ def create_app() -> gr.Blocks:
         font-size: 14px;
         opacity: 0.9;
     }
+    .stats-output {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        font-family: monospace;
+        white-space: pre-wrap;
+    }
     .footer-text {
         text-align: center;
         font-size: 12px;
@@ -109,58 +116,47 @@ def create_app() -> gr.Blocks:
     }
     """
 
-    with gr.Blocks(
-        title="Text Tools",
-        theme=gr.themes.Soft(),
-        css=css,
-    ) as demo:
+    with gr.Blocks(title="Text Tools") as demo:
         gr.HTML("""
         <div class="main-header">
-            <h1>Text Tools</h1>
-            <p>Metin Analiz ve D\u00f6n\u00fc\u015f\u00fcm Ara\u00e7lar\u0131</p>
+            <h1>📝 Text Tools</h1>
+            <p>Metin Analiz ve Dönüşüm Araçları — GitHub Actions ile HuggingFace Spaces'e Deploy Edildi</p>
         </div>
         """)
 
         text_input = gr.Textbox(
             label="Metin",
-            placeholder="Analiz etmek veya d\u00f6n\u00fc\u015ft\u00fcrmek i\u00e7in metninizi buraya yaz\u0131n...",
+            placeholder="Analiz etmek veya dönüştürmek için metninizi buraya yazın...",
             lines=5,
             max_lines=20,
         )
 
         with gr.Row():
             with gr.Column(scale=1):
-                gr.Markdown("### Istatistikler")
-                stats_btn = gr.Button("Istatistikleri G\u00f6ster", variant="primary")
+                gr.Markdown("### 📊 İstatistikler")
+                stats_btn = gr.Button("İstatistikleri Göster", variant="primary")
                 stats_output = gr.Textbox(
-                    label="Sonu\u00e7",
+                    label="Sonuç",
                     lines=8,
                     max_lines=10,
-                    show_copy_button=True,
                 )
 
             with gr.Column(scale=1):
-                gr.Markdown("### D\u00f6n\u00fc\u015f\u00fcm")
+                gr.Markdown("### 🔤 Dönüşüm")
                 case_dropdown = gr.Dropdown(
-                    choices=[
-                        "Bu\u00fcy\u00fck Harf",
-                        "K\u00fc\u00e7\u00fck Harf",
-                        "Ba\u015fl\u0131k Format\u0131",
-                        "Ters \u00c7evir",
-                    ],
-                    value="Bu\u00fcy\u00fck Harf",
-                    label="I\u015flem",
+                    choices=["Büyük Harf", "Küçük Harf", "Başlık Formatı", "Ters Çevir"],
+                    value="Büyük Harf",
+                    label="İşlem",
                 )
-                transform_btn = gr.Button("D\u00f6n\u00fc\u015ft\u00fcr", variant="secondary")
+                transform_btn = gr.Button("Dönüştür", variant="secondary")
                 transform_output = gr.Textbox(
-                    label="D\u00f6n\u00fc\u015ft\u00fcr\u00fclm\u00fc\u015f Metin",
+                    label="Dönüştürülmüş Metin",
                     lines=5,
                     max_lines=20,
-                    show_copy_button=True,
                 )
 
         with gr.Row():
-            clear_btn = gr.Button("Temizle", variant="stop")
+            clear_btn = gr.Button("🗑️ Temizle", variant="stop")
 
         stats_btn.click(get_stats, inputs=text_input, outputs=stats_output)
         transform_btn.click(
@@ -175,4 +171,9 @@ def create_app() -> gr.Blocks:
 
 if __name__ == "__main__":
     demo = create_app()
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        theme=gr.themes.Soft(),
+        css=css,
+    )

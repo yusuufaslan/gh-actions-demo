@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import gradio as gr
 
-from text_utils import (
+from .text_utils import (
     get_stats,
     transform_case,
 )

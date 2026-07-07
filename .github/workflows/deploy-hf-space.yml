@@ -45,6 +45,7 @@ jobs:
         run: |
           FILE_LIST=(
             "src/app.py:app.py"
+            "src/text_utils.py:text_utils.py"
             "requirements.txt:requirements.txt"
           )
           for entry in "${FILE_LIST[@]}"; do

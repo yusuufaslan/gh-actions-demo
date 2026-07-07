@@ -17,3 +17,8 @@ Thumbs.db
 # documentations/
 # documentations/*
 # documentations/*.md
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+ruff.log

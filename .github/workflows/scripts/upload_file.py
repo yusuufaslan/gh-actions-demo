@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+
 from huggingface_hub import HfApi
 
 space_id = os.environ.get("SPACE_ID", "")

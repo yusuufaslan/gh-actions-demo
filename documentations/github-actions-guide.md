@@ -1,7 +1,7 @@
 # GitHub Actions Kapsamlı Dokümanı
 
 **Oluşturulma Tarihi:** 6 Temmuz 2026
-**Son Güncelleme:** 6 Temmuz 2026
+**Son Güncelleme:** 7 Temmuz 2026
 **Yazar:** Mühendislilik Ekibi
 **Durum:** Aktif
 
@@ -1200,6 +1200,7 @@ Bu proje şu konuları kapsar:
 - Secrets yönetimi (HF_TOKEN)
 - Path-based trigger'lar ile seçici deployment
 - Manuel tetikleyici (workflow_dispatch) kullanımı
+- CI Pipeline: Ruff ile linting/formatting + Pytest ile otomatik test (Güncelleme: 7 Temmuz 2026)
 
 ---
 
@@ -1211,9 +1212,12 @@ Bu proje şu konuları kapsar:
 | Actions Marketplace | https://github.com/marketplace?type=actions |
 | Expression Syntax | https://docs.github.com/en/actions/learn-github-actions/expressions |
 | Context Reference | https://docs.github.com/en/actions/learn-github-actions/contexts |
+| Ruff Docs | https://docs.astral.sh/ruff/ |
+| Pytest Docs | https://docs.pytest.org/ |
+| Coverage.py Docs | https://coverage.readthedocs.io/ |
 | Gradio Docs | https://www.gradio.app/docs |
 | HF Spaces Docs | https://huggingface.co/docs/hub/spaces-overview |
 
 ---
 
-**Son Düzenleme:** 6 Temmuz 2026
+**Son Düzenleme:** 7 Temmuz 2026

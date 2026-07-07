@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: Ruff Lint & Format
+    name: Ruff Lint & Forma
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -35,6 +35,7 @@ jobs:
     name: Pytest
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: lint
 
     steps:
       - name: Checkout
